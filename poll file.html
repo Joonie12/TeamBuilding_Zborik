@@ -1,26 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TeamBuilding Poll</title>
+    <style>
+        body {
+            background-color: rgb(82, 113, 163);
+            font-family: 'Comic Sans MS', bold, sans-serif;
+            color: rgb(176, 187, 248);
+        }
+        .thankYouMessage {
+            color: red; /* Set the initial color of the thank you message */
+        }
+        .resultsDisplayed {
+            background-color: lightgreen; /* Set the background color when results are displayed */
+            color: darkgreen !important; /* Set the text color when results are displayed */
+        }
+    </style>
 </head>
 <body>
-    <h1>Aky chceme mat TeamBuilding?</h1>
+    <h1>Aky chceme mat TeamBuilding? (aspon 2 odpovede ale len raz)</h1>
     <form id="pollForm">
         <label>
-            <input type="radio" name="choice" value="A"> A. opekačka na žel. studničke (zastavka Lanovka)
+            <p><input type="checkbox" name="choice" value="A"> A. opekačka na žel. studničke (zastavka Lanovka)</p>
         </label>
         <label>
-            <input type="radio" name="choice" value="B"> B. bowling PBC (zastavka Markova)
+            <p><input type="checkbox" name="choice" value="B"> B. bowling PBC (zastavka Markova)</p>
         </label>
         <label>
-            <input type="radio" name="choice" value="C"> C. bedmintonovy turnaj max 18€/2hod/os (zast. Ekonomick. univ. - Slavia Agrofert)
+            <p><input type="checkbox" name="choice" value="C"> C. bedmintonovy turnaj max 18€/2hod/os (zast. Ekonomick. univ. - Slavia Agrofert)</p>
         </label>
-        <button type="submit">Submit</button>
+        <button type="submit" id="submitButton">Submit</button>
     </form>
     <div id="results">
         <!-- Poll results will be displayed here -->
+    </div>
+    <div id="thankYou" class="thankYouMessage" style="display: none;">
+        <p>DAKUJEME!</p>
+        <p>P.S.: vraj nebude chybat novy hudobny nastroj, ktory zvladne kazdy ! :)</p>
     </div>
     <script>
         // Initialize vote counts
@@ -30,30 +46,46 @@
             C: 0
         };
 
+        // Initialize the submission flag
+        let submitted = false;
+
         // Function to handle form submission
         document.getElementById("pollForm").addEventListener("submit", function (e) {
             e.preventDefault();
 
-            // Get the selected choice
-            const selectedChoice = document.querySelector('input[name="choice"]:checked');
-            
-            if (selectedChoice) {
-                // Update vote count
-                voteCounts[selectedChoice.value]++;
+            if (!submitted) { // Check if the user hasn't submitted yet
+                // Get all selected choices
+                const selectedChoices = document.querySelectorAll('input[name="choice"]:checked');
 
-                // Display real-time vote counts
-                const resultsDiv = document.getElementById("results");
-                resultsDiv.innerHTML = `
-                    <p>A. opekačka na žel. studničke (zastavka Lanovka): ${voteCounts.A} votes</p>
-                    <p>B. bowling PBC (zastavka Markova): ${voteCounts.B} votes</p>
-                    <p>C. bedmintonovy turnaj max 18€/2hod/os (zast. Ekonomick. univ. - Slavia Agrofert): ${voteCounts.C} votes</p>
-                `;
+                if (selectedChoices.length > 0) {
+                    // Update vote counts for each selected choice
+                    selectedChoices.forEach(choice => {
+                        voteCounts[choice.value]++;
+                    });
 
-                // Disable the selected option
-                selectedChoice.disabled = true;
+                    // Display real-time vote counts
+                    const resultsDiv = document.getElementById("results");
+                    resultsDiv.classList.remove("resultsDisplayed"); // Remove the class with initial styles
+                    resultsDiv.innerHTML = `
+                        <p>A. opekačka na žel. studničke (zastavka Lanovka): ${voteCounts.A} votes</p>
+                        <p>B. bowling PBC (zastavka Markova): ${voteCounts.B} votes</p>
+                        <p>C. bedmintonovy turnaj max 18€/2hod/os (zast. Ekonomick. univ. - Slavia Agrofert): ${voteCounts.C} votes</p>
+                    `;
 
-                // Clear the selection
-                selectedChoice.checked = false;
+                    // Show the "DAKUJEME!" message
+                    const thankYouDiv = document.getElementById("thankYou");
+                    thankYouDiv.style.display = "block";
+
+                    // Set the submission flag to true
+                    submitted = true;
+
+                    // Disable the "Submit" button
+                    const submitButton = document.getElementById("submitButton");
+                    submitButton.disabled = true;
+
+                    // Add the class to change result colors
+                    resultsDiv.classList.add("resultsDisplayed");
+                }
             }
         });
     </script>
