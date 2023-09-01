@@ -1,15 +1,61 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Dinner Poll</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TeamBuilding Poll</title>
 </head>
 <body>
-    <h1>What do you want for dinner?</h1>
-    <form>
-        <input type="radio" name="dinner" value="wine_and_bowling">a) Wine and Bowling<br>
-        <input type="radio" name="dinner" value="lasagne_with_TV">b) Lasagne with TV<br>
-        <br>
-        <input type="submit" value="Submit">
+    <h1>Aky chceme mat TeamBuilding?</h1>
+    <form id="pollForm">
+        <label>
+            <input type="radio" name="choice" value="A"> A. opekačka na žel. studničke (zastavka Lanovka)
+        </label>
+        <label>
+            <input type="radio" name="choice" value="B"> B. bowling PBC (zastavka Markova)
+        </label>
+        <label>
+            <input type="radio" name="choice" value="C"> C. bedmintonovy turnaj max 18€/2hod/os (zast. Ekonomick. univ. - Slavia Agrofert)
+        </label>
+        <button type="submit">Submit</button>
     </form>
+    <div id="results">
+        <!-- Poll results will be displayed here -->
+    </div>
+    <script>
+        // Initialize vote counts
+        let voteCounts = {
+            A: 0,
+            B: 0,
+            C: 0
+        };
+
+        // Function to handle form submission
+        document.getElementById("pollForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            // Get the selected choice
+            const selectedChoice = document.querySelector('input[name="choice"]:checked');
+            
+            if (selectedChoice) {
+                // Update vote count
+                voteCounts[selectedChoice.value]++;
+
+                // Display real-time vote counts
+                const resultsDiv = document.getElementById("results");
+                resultsDiv.innerHTML = `
+                    <p>A. opekačka na žel. studničke (zastavka Lanovka): ${voteCounts.A} votes</p>
+                    <p>B. bowling PBC (zastavka Markova): ${voteCounts.B} votes</p>
+                    <p>C. bedmintonovy turnaj max 18€/2hod/os (zast. Ekonomick. univ. - Slavia Agrofert): ${voteCounts.C} votes</p>
+                `;
+
+                // Disable the selected option
+                selectedChoice.disabled = true;
+
+                // Clear the selection
+                selectedChoice.checked = false;
+            }
+        });
+    </script>
 </body>
 </html>
